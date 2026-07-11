@@ -1,0 +1,1 @@
+T-SQL BACKUP DATABASE syntax, INIT/NOINIT, backup devices
