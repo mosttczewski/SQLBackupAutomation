@@ -51,3 +51,17 @@ Dry-run technique — testing destructive logic safely with Write-Host before sw
 
 **Design/ordering decision**
 Backup-before-cleanup vs. cleanup-before-backup, I've choosen backup first because of simpler failure recovery path. There is no textbook solutions for things like this
+### 03.08.26
+**Error handling**
+- try / catch — attempt code, jump to catch only if something inside try throws an error
+-ErrorAction Stop — forces a cmdlet's errors to be "terminating" so try/catch actually catches them (not all PowerShell errors are terminating by default)
+- $_ inside a catch block means something different than inside ForEach-Object — here it's the error object that was thrown, not a file
+- $_.Exception.Message — drills down to just the clean, human-readable error text, instead of the whole raw error object
+- Design decision: put both backup and cleanup inside the same try block, so a failed backup skips cleanup entirely — reasoning: avoids ending up with zero valid backups
+- Tested by deliberately stopping the SQL Server service to trigger a real failure, confirming catch fires and cleanup is correctly skipped
+
+**More git features**
+git log — full commit history (hash, author, date, full message)
+git log --oneline — compressed view, one line per commit; only shows the first line of each message, which is why short imperative summary lines matter
+git show <hash> — inspect the actual diff/content of a specific past commit
+.gitignore — a file listing patterns git should never track (e.g. *.bak), even if git add . is run; worth having as a default/"cheap insurance" even when it doesn't apply to your current setup yet
